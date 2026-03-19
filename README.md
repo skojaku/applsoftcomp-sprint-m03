@@ -1,5 +1,5 @@
 # Build a Personalized Assistant
-
+https://opencode.ai/
 > [!IMPORTANT]
 > **Fork this repo first.** If you skip this step, your Codespace will open on the original repo and you will have no way to save or push your work. Your changes will be lost when the Codespace is deleted.
 >
