@@ -4,19 +4,15 @@ Design and build an AI assistant that makes *your* life or work easier. The assi
 
 ## What to Build
 
-Pick an assistant that solves a real problem for you. Some ideas:
+Pick an assistant that solves a real problem for you. Here are some example ideas. You can build assistant for other use cases too. 
 
 | Idea | What it does |
 |---|---|
 | **Literature Assistant** | Given a research question, searches and summarizes relevant papers using the [OpenAlex CLI](https://github.com/alejandroschuler/openalex) |
 | **Personalized News Briefing** | Fetches today's news and delivers a briefing in the tone, style, and focus areas you specify |
-| **Research Idea Generator** | Reads your notes/papers and proposes new research directions aligned with your interests |
-| **Meeting Prep Assistant** | Given a meeting agenda and context, drafts talking points and questions in your voice |
 | **Anything else** | It just has to be useful to *you* |
 
 The assistant should improve the more you use it: when you give feedback ("be more concise", "focus on methods, not results"), the assistant remembers and applies it next time.
-
----
 
 ## Requirements
 
@@ -104,31 +100,28 @@ Once all tests are approved, add them to each task's subsection in PRD.md.
 
 git commit the updated `PRD.md`.
 
----
-
-### Step 4: Implement (Ralph Wiggum Pattern)
-
-Write a prompt to implement the plan using the Ralph Wiggum loop. Your `SKILL.md` must:
-
-1. Spawn a fresh sub-agent for each task via the Task tool (no memory of previous agents)
-2. Specify shared files for inter-agent communication (e.g., `preferences.md`, `progress.txt`, `learning.txt`)
-3. Define the Lead Agent loop: when to spawn, when to wait, when to stop
-4. Define Sub-Agent steps: how it reads preferences, how it fetches/retrieves context, what it produces, how it verifies against `PRD.md` tests, what it writes back, and how it stops after one task
-5. Define stop conditions and what happens on repeated failure
-
-See [`.agents/skills/literature-review/SKILL.md`](../.agents/skills/literature-review/SKILL.md) for an example of the full pattern.
-
-> [!NOTE]
-> **Ralph Wiggum Pattern:**
-> - **Lead Agent:** a loop controller. Initializes shared files on first run, spawns one sub-agent per task via the Task tool, waits, then repeats until done.
-> - **Sub-Agent:** spawned fresh each time. No memory of previous agents. Its prompt must be fully self-contained.
-> - **Shared files:** the only memory between agents. Typically `progress.txt` (what is done), `learning.txt` (lessons learned), and `preferences.md` (user preferences).
+> [!TIP]
+> **Running opencode headlessly** — once your skill is written, you can run it non-interactively from the terminal without opening the TUI:
+> ```bash
+> opencode run "Run my skill on this input: ..."
+> ```
+> Useful flags:
+> - `-c` / `--continue` — continue the last session (carries context forward)
+> - `-m provider/model` — override the model, e.g. `-m openrouter/qwen/qwen3-235b-a22b:free`
+> - `--agent <name>` — select a specific agent
+>
+> This lets you script repeated test runs, e.g.:
+> ```bash
+> opencode run "Literature-review papers in the papers/ folder."
+> opencode run -c "I didn't like the summary length. Next time, keep each paper to 3 sentences."
+> opencode run "Tell me what you've learned about my preferences."
+> ```
 
 ---
 
-### Step 5: Teach It Your Preferences
+### Step 4: Teach It Your Preferences
 
-Run your assistant on at least three different inputs. After each run, give it feedback:
+Run your assistant on at least three different inputs. After each run, give it feedback, e.g., 
 
 ```
 I didn't like [X]. Next time, [Y].
